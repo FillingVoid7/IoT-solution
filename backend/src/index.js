@@ -4,11 +4,12 @@
   import { fetchImagesByDateAndConvertToPDF } from './controllers/ImageControllers.js';
   import { fetchSubjectDate } from './controllers/fetchSubjectDate.js';
   import dotenv from 'dotenv';
-import { fetchContentOfSubjectByDate } from './controllers/fetchContentOfSubjectByDate';
   dotenv.config();
   
-
   const app = express();
+  app.use(cors({
+    origin: 'http://localhost:5173'
+  }));
   const port = 3000;
 
 
