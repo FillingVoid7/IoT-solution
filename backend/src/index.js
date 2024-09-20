@@ -4,6 +4,8 @@
   import { fetchImagesByDateAndConvertToPDF } from './controllers/ImageControllers.js';
   import { fetchSubjectDate } from './controllers/fetchSubjectDate.js';
   import dotenv from 'dotenv';
+  import cors from 'cors'
+import { fetchContentOfSubjectByDate } from './controllers/fetchContentOfSubjectByDate';
   dotenv.config();
   
   const app = express();
