@@ -1,17 +1,15 @@
-const express = require('express');
-
+import express from 'express';
+import { connectDB } from './utils/connectDB.js';
+import { fetchImagesByDateAndConvertToPDF } from './controllers/ImageControllers.js';
 const app = express();
+const port = 3000;
 
-app.use((req, res, next) => {
-    console.log(`${req.method} request for ${req.url}`);
-    next();
-  });
+connectDB();
+app.use(express.json());
 
-  const port = 3000;
+app.get('/convert/:date', fetchImagesByDateAndConvertToPDF);
+// app.get('/convert-local/:imageName', fetchImagesByDateAndConvertToPDF);
 
 app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);  
+  console.log(`Server running at http://localhost:${port}`);
 });
-app.get('/', (req, res) => {
-    res.send('Hello World');  
-  });
