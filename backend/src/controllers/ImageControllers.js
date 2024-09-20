@@ -1,4 +1,3 @@
-import { MongoClient } from 'mongodb';
 import PDFDocument from 'pdfkit';
 import fs from 'fs';
 import path from 'path';
@@ -8,18 +7,10 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const url = process.env.MONGODB_URI;
-const dbName = 'fourth_Sem'; 
-
-const client = new MongoClient(url);
-
-export const fetchImagesByDateAndConvertToPDF = async (req, res) => {
+export const fetchImagesByDateAndConvertToPDF = async (req, res, db) => {
   const { date } = req.params;
 
   try {
-    await client.connect();
-    const db = client.db(dbName);
-
     // Get all collection names dynamically
     const collections = await db.listCollections().toArray();
 
@@ -42,13 +33,10 @@ export const fetchImagesByDateAndConvertToPDF = async (req, res) => {
         textFound = true; // Set flag if any images are found
 
         for (const document of documents) {
-          console.log(document)
-          // if (document.content && document.content.text) { // Ensure content exists
-          //   doc.fontSize(15).text(document.content.text);
-          // }
+          console.log(document);
           document.content.map((real) => {
             doc.fontSize(15).text(real.text);
-          })
+          });
         }
       }
     }
@@ -64,11 +52,8 @@ export const fetchImagesByDateAndConvertToPDF = async (req, res) => {
         res.status(404).json({ message: 'No texts found for the given date' });
       }
     });
-
   } catch (error) {
     console.error('Error fetching documents:', error);
     res.status(500).json({ message: 'Internal Server Error' });
-  } finally {
-    await client.close();
   }
 };
