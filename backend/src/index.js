@@ -3,9 +3,8 @@
   import { fetchAllSubjects } from './controllers/fetchAllSubjects.js';
   import { fetchImagesByDateAndConvertToPDF } from './controllers/ImageControllers.js';
   import { fetchSubjectDate } from './controllers/fetchSubjectDate.js';
+  import cors from 'cors';
   import dotenv from 'dotenv';
-  import cors from 'cors'
-import { fetchContentOfSubjectByDate } from './controllers/fetchContentOfSubjectByDate';
   dotenv.config();
   
   const app = express();

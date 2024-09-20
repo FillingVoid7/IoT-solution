@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Outlet, useParams } from 'react-router-dom'
 import axios from 'axios'
 function Subject() {
     const params = useParams()
@@ -9,11 +9,12 @@ function Subject() {
 
     useEffect(() => {
          const fetchSubject = async() => {
-            const response = await axios.get(`process.env.REACT_APP_API_URL/getSubjectData/${params.subjectName}`)
-            console.log(response)
+            const response = await axios.get(`http://localhost:3000/getSubjectData/${subjectName}`)
+            setDates(response.data)
+            console.log(response.data)
          }
             fetchSubject()
-    })
+    },[])
   return (
     <div>
         <h1>{subjectName}</h1>
