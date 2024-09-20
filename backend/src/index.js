@@ -5,7 +5,6 @@
   import { fetchSubjectDate } from './controllers/fetchSubjectDate.js';
   import cors from 'cors';
   import dotenv from 'dotenv';
-import { fetchContentOfSubjectByDate } from './controllers/fetchContentOfSubjectByDate.js';
   dotenv.config();
   
   const app = express();
