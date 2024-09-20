@@ -4,6 +4,7 @@ import Layout from './components/Layout';  // Import the new Layout component
 import Home from './pages/Home';
 import Subject from './pages/Subject';
 import Contents from './pages/Contents';
+import './index.css';
 
 function App() {
   return (
