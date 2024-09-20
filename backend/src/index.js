@@ -4,11 +4,13 @@
   import { fetchImagesByDateAndConvertToPDF } from './controllers/ImageControllers.js';
   import { fetchSubjectDate } from './controllers/fetchSubjectDate.js';
   import dotenv from 'dotenv';
+import { fetchContentOfSubjectByDate } from './controllers/fetchContentOfSubjectByDate';
   dotenv.config();
   
 
   const app = express();
   const port = 3000;
+
 
   // MongoDB setup
   const url = process.env.MONGODB_URI;
@@ -38,6 +40,7 @@
   app.get('/get-all-subjects', (req, res) => fetchAllSubjects(req, res, db));
   app.get('/convert/:date', (req, res) => fetchImagesByDateAndConvertToPDF(req, res, db));
   app.get('/getSubjectData/:subjectName',(req,res)=>fetchSubjectDate(req,res,db));
+  app.get('/getSubjectContent/:date',(req,res)=>fetchContentOfSubjectByDate(req,res,db))
 
   app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
