@@ -31,8 +31,11 @@ export const generateFlashcardsByDate = async (req, res, db) => {
             }
         }
 
-        const model = await genAI.getGenerativeModel({ model: "gemini-pro" });
-        const prompt = `Create 5 flashcards based on the following text. Each flashcard should have a 'front' (question) and a 'back' (answer). Format the output as a JSON array of objects, each with 'front' and 'back' properties. Here's the text so based on this text you can also generate relavant flashcard contents "${oneString}"`;
+
+            
+
+                const model = await genAI.getGenerativeModel({ model: "gemini-pro" });
+                const prompt = `Create 5 flashcards based on the following text. Each flashcard should have a 'front' (question ) and a 'back' (answe   r ). Format the output as a JSON array of objects, each with 'front' and 'back' properties. Here's the text: "${oneString}"`;
 
         const result = await model.generateContent(prompt);
         console.log("Full Result:", result); // Log the full result for debugging

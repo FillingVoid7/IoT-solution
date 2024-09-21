@@ -8,6 +8,7 @@ import dotenv from 'dotenv';
 import { fetchContentOfSubjectByDate } from './controllers/fetchContentOfSubjectByDate.js';
 import { generateFlashcardsByDate } from './controllers/generateflashcards.js';
 import { generateQuizesByDate } from './controllers/generateQuizesByDate.js';
+import { summarizeTextsByDate } from './controllers/summarizeTexts.js';
 dotenv.config();
 
 const app = express();
@@ -46,6 +47,7 @@ app.get('/getSubjectData/:subjectName', (req, res) => fetchSubjectDate(req, res,
 app.get('/getSubjectContent/:date', (req, res) => fetchContentOfSubjectByDate(req, res, db))
 app.get('/generateFlashcards/:date', (req, res) => generateFlashcardsByDate(req, res, db))
 app.get('/generateQuizes/:date', (req, res) => generateQuizesByDate(req, res, db))
+app.get('/summarizeTexts/:date',(req,res)=> summarizeTextsByDate(req,res,db))
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
