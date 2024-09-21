@@ -44,7 +44,7 @@ function Home() {
         <div className="text-xl">Loading...</div>
       </div>
     );
-  }
+  } 
 
   if (error) {
     return (
@@ -65,15 +65,17 @@ function Home() {
 
       <div className="flex flex-wrap justify-center mt-10 gap-6">
         {filledSubjects.map((subject, index) => (
-          <div
-            key={index}
-            className="w-80 h-40  bg- rounded-lg shadow-lg flex items-center justify-center transition-transform transform hover:scale-110 cursor-pointer"
-            onClick={() => handleSubjectClick(subject)} // Add click handler
-          >
-            <span className={`text-lg ${subject !== 'No Subject' ? 'font-bold' : ''}`}>
-              {subject !== 'No Subject' ? subject.replace('-', ' ') : subject}
-            </span>
-          </div>
+          subject !== 'flashcards' && subject !== 'quizes' && (
+            <div
+              key={index}
+              className="w-80 h-40 bg- rounded-lg shadow-lg flex items-center justify-center transition-transform transform hover:scale-110 cursor-pointer"
+              onClick={() => handleSubjectClick(subject)} // Add click handler
+            >
+              <span className={`text-lg ${subject !== 'No Subject' ? 'font-bold' : ''}`}>
+                {subject}
+              </span>
+            </div>
+          )
         ))}
       </div>
     </div>

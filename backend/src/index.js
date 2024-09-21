@@ -6,8 +6,8 @@ import { fetchSubjectDate } from './controllers/fetchSubjectDate.js';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { fetchContentOfSubjectByDate } from './controllers/fetchContentOfSubjectByDate.js';
-import { generateflashcardsByDate } from './controllers/generateflashcards.js';
-import { generateQuizesByDate } from './controllers/generateQuizesByDate';
+import { generateFlashcardsByDate } from './controllers/generateflashcards.js';
+import { generateQuizesByDate } from './controllers/generateQuizesByDate.js';
 dotenv.config();
 
 const app = express();
@@ -44,7 +44,7 @@ app.use(express.json());
 app.get('/get-all-subjects', (req, res) => fetchAllSubjects(req, res, db));
 app.get('/getSubjectData/:subjectName', (req, res) => fetchSubjectDate(req, res, db));
 app.get('/getSubjectContent/:date', (req, res) => fetchContentOfSubjectByDate(req, res, db))
-app.get('/generateFlashcards/:date', (req, res) => generateflashcardsByDate(req, res, db))
+app.get('/generateFlashcards/:date', (req, res) => generateFlashcardsByDate(req, res, db))
 app.get('/generateQuizes/:date', (req, res) => generateQuizesByDate(req, res, db))
 
 app.listen(port, () => {
