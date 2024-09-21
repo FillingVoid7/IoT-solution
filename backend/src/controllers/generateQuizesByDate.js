@@ -35,7 +35,7 @@ export const generateQuizesByDate = async (req, res, db) => {
         }
 
         const model = await genAI.getGenerativeModel({ model: "gemini-pro" });
-        const prompt = `Create and return at least 10 quiz with multiple-choice questions based on the following text. Each question should include the question and an array of 4 options, where each option indicates whether it is correct. Format the output as a JSON array of objects. Here's the text: "${oneString}"`;
+        const prompt = `Create and return at least 10 quiz with multiple-choice questions based on the following text. Each question should include the question, an array of 4 options and a answer. Format the output as a JSON array of objects.Ignore any images Here's the text: "${oneString}"`;
 
         const result = await model.generateContent(prompt);
         const quizContent = await result.response.text();
@@ -52,7 +52,7 @@ export const generateQuizesByDate = async (req, res, db) => {
             if (!Array.isArray(parsedQuiz) || parsedQuiz.length === 0) {
                 throw new Error("Invalid quiz structure");
             }
-
+            console.log("Parsed Quiz:", parsedQuiz);
             for (const question of parsedQuiz) {
                 if (!question.question || !Array.isArray(question.options) || !question.answer) {
                     throw new Error("Invalid question structure");

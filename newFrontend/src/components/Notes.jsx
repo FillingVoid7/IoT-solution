@@ -12,7 +12,7 @@ const Notes = ({ imageData }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [noteText, setNoteText] = useState('');
   const { date } = useParams();
-
+  console.log(imageData);
   useEffect(() => {
     const allText = imageData.map((content) => content.image_text).join('\n\n');
     setNoteText(allText);
