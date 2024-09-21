@@ -31,7 +31,7 @@ export const generateFlashcardsByDate = async (req, res, db) => {
             if (real.image_text) {
                 console.log("Image Text Found:", real.image_text);
 
-                const model = await genAI.getGenerativeModel({ model: "gemini-pro" });
+                const model = genAI.getGenerativeModel({ model: "gemini-pro" });
                 const prompt = `Create 5 flashcards based on the following text. Each flashcard should have a 'front' (question or prompt) and a 'back' (answer or explanation). Format the output as a JSON array of objects, each with 'front' and 'back' properties. Here's the text: "${real.image_text}"`;
 
                 const result = await model.generateContent(prompt);
