@@ -7,31 +7,15 @@ const Notes = ({ imageData }) => {
   const [fontName, setFontName] = useState('Arial');
   const [lineHeight, setLineHeight] = useState(1.5);
   const [letterSpacing, setLetterSpacing] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+  
   const [quizData, setQuizData] = useState(null);
   const [flashcardData, setFlashcardData] = useState([]);
   const [isFlashcardModalOpen, setIsFlashcardModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [currentFlashcardIndex, setCurrentFlashcardIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [selectedAnswers, setSelectedAnswers] = useState({});
   const { date, subjectName } = useParams();
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-
-// Function to go to the next question
-const nextQuestion = () => {
-  if (currentQuestionIndex < quizData.length - 1) {
-    setCurrentQuestionIndex(currentQuestionIndex + 1);
-  }
-};
-
-// Function to go to the previous question
-const prevQuestion = () => {
-  if (currentQuestionIndex > 0) {
-    setCurrentQuestionIndex(currentQuestionIndex - 1);
-  }
-};
-
+  const [isLoading, setIsLoading] = useState(false);
   const allText = imageData.map(content => content.image_text).join(' ');
 
   const handleGenerateQuiz = async () => {
@@ -49,13 +33,11 @@ const prevQuestion = () => {
 
   const handleGenerateFlashcards = async () => {
     try {
-      setIsLoading(true);
       const response = await axios.get(`http://localhost:3000/generateFlashcards/${date}?subjectName=${subjectName}`);
       setFlashcardData(response.data.flashcards);
       setIsFlashcardModalOpen(true);
-      setIsLoading(false);
+      console.log("Data:", response);
     } catch (error) {
-      setIsLoading(false);
       console.error('Error generating flashcards:', error);
     }
   };
@@ -83,19 +65,6 @@ const prevQuestion = () => {
   const flipFlashcard = () => {
     setIsFlipped(!isFlipped);
   };
-
-  const handleAnswerClick = (questionIndex, option) => {
-    setSelectedAnswers(prev => ({
-      ...prev,
-      [questionIndex]: option.correct
-    }));
-  };
-
-  if (isLoading) {
-    return (
-      <div className="p-4 max-w-4xl mx-auto text-center">Loading...</div>
-    );
-  }
 
   return (
     <div className="p-4 max-w-4xl mx-auto">
@@ -127,43 +96,36 @@ const prevQuestion = () => {
           {allText}
         </div>
       </div>
-
-      {quizData && (
-  <div className="mb-4 p-4 border rounded bg-white">
-    <h2 className="text-xl font-bold mb-2">Generated Quiz:</h2>
-    <p className="mb-2">
-      Question {currentQuestionIndex + 1} of {quizData.length}
-    </p>
-    <div>
-      <p className="font-semibold">{quizData[currentQuestionIndex].question}</p>
-      <ul className="list-disc pl-8">
-        {quizData[currentQuestionIndex].options.map((option, optionIndex) => (
-          <li 
-            key={optionIndex} 
-            onClick={() => handleAnswerClick(currentQuestionIndex, option)} 
-            className={`cursor-pointer ${selectedAnswers[currentQuestionIndex] !== undefined ? 
-              (option.correct ? "text-green-600" : "text-red-600") : ""}`}
-          >
-            {option.answer} 
-            {selectedAnswers[currentQuestionIndex] !== undefined && (
-              <span>
-                {option.correct ? " (Correct)" : " (Incorrect)"}
-              </span>
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
-    <div className="flex justify-between mt-4">
-      <button onClick={prevQuestion} disabled={currentQuestionIndex === 0} className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50">
-        Previous
-      </button>
-      <button onClick={nextQuestion} disabled={currentQuestionIndex === quizData.length - 1} className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50">
-        Next
-      </button>
+     {quizData && (
+  <div className="mb-8">
+    <h2 className="text-2xl font-bold mb-4 text-center">Your Generated Quiz</h2>
+    <div className="grid gap-6 grid-cols-1 sm:grid-cols-2">
+      {quizData.map((question, index) => (
+        <div
+          key={index}
+          className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transform transition duration-300 hover:scale-105"
+        >
+          <div className="mb-2 text-lg font-semibold text-blue-700">{index + 1}. {question.question}</div>
+          <ul className="space-y-2 mt-4">
+            {question.options.map((option, optionIndex) => (
+              <li
+                key={optionIndex}
+                className={`px-4 py-2 rounded-md border ${
+                  option.correct
+                    ? 'bg-green-100 border-green-500 text-green-700 font-semibold'
+                    : 'bg-gray-100 border-gray-300 text-gray-700'
+                }`}
+              >
+                {option.answer} {option.correct && <span className="ml-2">(Correct)</span>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
     </div>
   </div>
 )}
+
 
       {isFlashcardModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
@@ -237,14 +199,34 @@ const prevQuestion = () => {
                   type="text"
                   value={fontName}
                   onChange={(e) => setFontName(e.target.value)}
-                  className="border border-gray-300 rounded p-2 w-full"
+                  className="w-full border rounded px-2 py-1"
                 />
               </div>
             </div>
-            <button onClick={() => setIsSettingsModalOpen(false)} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">Close</button>
+            <button onClick={() => setIsSettingsModalOpen(false)} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
+              Close
+            </button>
           </div>
         </div>
       )}
+
+      <style jsx>{`
+        .perspective-1000 {
+          perspective: 1000px;
+        }
+        .transition-transform {
+          transition: transform 0.6s;
+        }
+        .transform-style-3d {
+          transform-style: preserve-3d;
+        }
+        .backface-hidden {
+          backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+          transform: rotateY(180deg);
+        }
+      `}</style>
     </div>
   );
 };

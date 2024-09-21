@@ -39,7 +39,7 @@ export const generateFlashcardsByDate = async (req, res, db) => {
             
 
                 const model = await genAI.getGenerativeModel({ model: "gemini-pro" });
-                const prompt = `Create 5 flashcards based on the following text. Each flashcard should have a 'front' (question or prompt) and a 'back' (answer or explanation). Format the output as a JSON array of objects, each with 'front' and 'back' properties. Here's the text: "${real.image_text}"`;
+                const prompt = `Create 5 flashcards based on the following text. Each flashcard should have a 'front' (question or prompt) and a 'back' (answer or explanation). Format the output as a JSON array of objects, each with 'front' and 'back' properties. Here's the text: "${oneString}"`;
 
                 const result = await model.generateContent(prompt);
                 console.log("Full Result:", result); // Log the full result for debugging
@@ -72,19 +72,20 @@ export const generateFlashcardsByDate = async (req, res, db) => {
             
         
 
-        if (flashcardsGenerated) {
-            // Save the flashcards to your database
-            const newFlashcard = new Flashcard({
-                flashCard: allFlashcards,
-                date: new Date(date), // Ensure the date is a Date object
-                subject: subjectName
-            });
-            await newFlashcard.save(); // Save the new flashcard document
-            res.status(200).json({ message: "Flashcards generated successfully", flashcards: allFlashcards });
-        } else {
-            res.status(404).json({ message: `No image text found to generate flashcards for date: ${date}` });
-        }
+        // if (flashcardsGenerated) {
+        //     // Save the flashcards to your database
+        //     const newFlashcard = new Flashcard({
+        //         flashCard: allFlashcards,
+        //         date: new Date(date), // Ensure the date is a Date object
+        //         subject: subjectName
+        //     });
+        //     await newFlashcard.save(); // Save the new flashcard document
+        //     res.status(200).json({ message: "Flashcards generated successfully", flashcards: allFlashcards });
+        // } else {
+        //     res.status(404).json({ message: `No image text found to generate flashcards for date: ${date}` });
+        // }
 
+        
     } catch (error) {
         console.error('Error generating flashcards:', error);
         res.status(500).json({ message: 'Internal Server Error' });
