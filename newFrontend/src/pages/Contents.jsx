@@ -12,11 +12,10 @@ import {
 import Notes from "../components/Notes";
 import Voice from "../components/Voice";
 import { motion } from 'framer-motion';
-
+import Flashcards from "../components/Flashcards";
+import Quiz from "../components/Quiz";
 // Placeholder components for each section
 
-const Flashcards = () => <div>Flashcards Component</div>;
-const Quiz = () => <div>Quiz Component</div>;
 
 
 const DashboardItem = ({ icon: Icon, label, onClick, isActive }) => {
@@ -189,7 +188,7 @@ function Contents() {
       case "Voice":
         return <Voice audioData={audioData} />;
       case "Flashcards":
-        return <Flashcards />;
+        return <Flashcards imageData={imageData} />;
       case "Quiz":
         return <Quiz />;
       default:
