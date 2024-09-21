@@ -36,7 +36,7 @@ export const generateQuizesByDate = async (req, res, db) => {
         console.log("One String:", oneString);
 
         const model = await genAI.getGenerativeModel({ model: "gemini-pro" });
-        const prompt = `Create and return at least 10 quiz with multiple-choice questions based on the following text. Each question should include the question and an array of options, where each option indicates whether it is correct. Format the output as a JSON array of objects. Here's the text: "${oneString}"`;
+        const prompt = `Create and return at least 10 quiz with multiple-choice questions based on the following text. Each question should include the question and an array of 4 options, where each option indicates whether it is correct. Format the output as a JSON array of objects. Here's the text: "${oneString}"`;
 
         const result = await model.generateContent(prompt);
         const quizContent = await result.response.text();
