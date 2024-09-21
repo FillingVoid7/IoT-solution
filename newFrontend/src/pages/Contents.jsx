@@ -8,6 +8,7 @@ import {
   MdHelp,
   MdCreditCard,
   MdChevronRight,
+  MdDashboard,
 } from "react-icons/md";
 import Notes from "../components/Notes";
 import Voice from "../components/Voice";
@@ -66,14 +67,14 @@ const Breadcrumbs = ({ subjectName, activeComponent, onNavigate }) => (
     <ol className="inline-flex items-center space-x-1 md:space-x-3">
       <li className="inline-flex items-center">
         <button
-          onClick={() => onNavigate("Home")}
+          onClick={() => onNavigate("Dashboard")}
           className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600"
         >
           <MdHome className="mr-2 w-4 h-4" />
-          Home
+          Dashboard
         </button>
       </li>
-      {activeComponent && activeComponent !== "Home" && (
+      {activeComponent && activeComponent !== "Dashboard" && (
         <li>
           <div className="flex items-center">
             <MdChevronRight className="w-6 h-6 text-gray-400" />
@@ -96,7 +97,7 @@ function Contents() {
   const month = currentDate.toLocaleString("default", { month: "long" });
   const day = currentDate.getDate();
   useEffect(() => {
-    setActiveComponent("Home"); // Set default active component
+    setActiveComponent("Dashboard"); // Set default active component
   }, []);
 
   useEffect(() => {
@@ -154,7 +155,7 @@ function Contents() {
 
   const renderActiveComponent = () => {
     switch (activeComponent) {
-      case "Home":
+      case "Dashboard":
         return (
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6 ">
             <DashboardItem
@@ -196,11 +197,16 @@ function Contents() {
     }
   };
   const handleNavigation = (component) => {
+    if (component === "Home") {
+      navigate('/')
+    };
+    
     console.log("Navigating to:", component); // Debug log
     setActiveComponent(component);
   };
 
   const SidebarItem = ({ icon: Icon, label }) => (
+    
     <button
       className={`flex gap-4 text-xl font-semibold items-center w-full p-2 rounded ${
         activeComponent === label
@@ -219,6 +225,7 @@ function Contents() {
       {/* Sidebar */}
       <div className="w-48 left-0 top-0 fixed flex-shrink-0 flex flex-col items-start justify-start py-4 space-y-4 px-2 h-full">
         <SidebarItem icon={MdHome} label="Home" />
+        <SidebarItem icon={MdDashboard} label="Dashboard" />
         <SidebarItem icon={MdNotes} label="Notes" />
         <SidebarItem icon={MdMic} label="Voice" />
         <SidebarItem icon={MdCreditCard} label="Flashcards" />

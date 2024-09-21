@@ -9,8 +9,6 @@ const Notes = ({ imageData }) => {
   const [lineHeight, setLineHeight] = useState(1.5); // Line height
   const [letterSpacing, setLetterSpacing] = useState(0); // Letter spacing in em
 
-
-  
   // add all text from imageData to a single string
   const allText = imageData.map(content => content.image_text).join(' ');
  
