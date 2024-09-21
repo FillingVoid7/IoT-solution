@@ -21,9 +21,9 @@ function Layout() {
       </main>
 
       {/* Common Footer */}
-      <footer>
+      {/* <footer>
         <p>© 2024 My App</p>
-      </footer>
+      </footer> */}
     </div>
   );
 }

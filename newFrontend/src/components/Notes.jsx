@@ -1,13 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-const Notes = ({ contents }) => {
+// @params content => array of objects containing image_url and image_text
+const Notes = ({ imageData }) => {
+  console.log(imageData);
   // State for editable text and styling options
   const [fontSize, setFontSize] = useState(16); // Font size in pixels
   const [fontName, setFontName] = useState('Arial');
   const [lineHeight, setLineHeight] = useState(1.5); // Line height
   const [letterSpacing, setLetterSpacing] = useState(0); // Letter spacing in em
 
-  const test = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`;
+
+  
+  // add all text from imageData to a single string
+  const allText = imageData.map(content => content.image_text).join(' ');
+ 
+  const test = allText;
 
 
   return (
@@ -93,8 +100,7 @@ export default Notes;
 
 
 
-//     const allText = contents.map(content => content.image_text).join(' ');
-
+//     
 {/* <h1>Notes Component</h1> */}
         {/* <div className="grid grid-cols-2 gap-4">
           {contents.map((content, index) => (
