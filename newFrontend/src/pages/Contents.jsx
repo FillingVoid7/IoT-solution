@@ -2,33 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { MdHome, MdNotes, MdMic, MdHelp, MdCreditCard, MdChevronRight } from 'react-icons/md';
+import Notes from '../components/Notes';
 
 // Placeholder components for each section
-const Notes = ({contents}) => {
-  
 
-
-  return (
-    <div>
-      <h1>Notes Component</h1>
-      <div className="grid grid-cols-2 gap-4">
-        {contents.map((content, index) => (
-          <div key={index} className="bg-white p-4 rounded-lg shadow-md">
-            <img src={content.image_url} alt="Note" className="w-full h-48 object-cover rounded-lg" />
-            <p className="text-sm mt-2">{content.image_text}</p>
-          </div>
-        ))}
-
-        {contents.length === 0 && (
-          <div className="bg-white p-4 rounded-lg shadow-md text-center">
-            <p>No notes available</p>
-            </div>
-        )}
-        </div>
-    </div>
-
-  );
-}
 const Voice = () => <div>Voice Component</div>;
 const Flashcards = () => <div>Flashcards Component</div>;
 const Quiz = () => <div>Quiz Component</div>;
