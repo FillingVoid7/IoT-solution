@@ -1,12 +1,12 @@
 export const fetchContentOfSubjectByDate = async (req, res, db) => {
     console.log("fetchContentOfSubjectByDate");
     try {
-      const subjectName = req.query.subjectName; // Get subjectName from query parameters
+      const subjectName = req.query.subjectName; 
       console.log("subjectName", subjectName);
   
-      const { date } = req.params; // Get date from URL parameters
+      const { date } = req.params; 
       console.log("date", date);
-  
+      
       const collection = await db.collection(subjectName);
       const content = await collection.findOne({ date: date }, { projection: { content: 1, _id: 0 } });
   

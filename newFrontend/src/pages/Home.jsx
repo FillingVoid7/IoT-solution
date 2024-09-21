@@ -67,7 +67,7 @@ function Home() {
         {filledSubjects.map((subject, index) => (
           <div
             key={index}
-            className="w-80 h-40 bg-gray-200 rounded-lg shadow-lg flex items-center justify-center transition-transform transform hover:scale-110 cursor-pointer"
+            className="w-80 h-40  bg- rounded-lg shadow-lg flex items-center justify-center transition-transform transform hover:scale-110 cursor-pointer"
             onClick={() => handleSubjectClick(subject)} // Add click handler
           >
             <span className={`text-lg ${subject !== 'No Subject' ? 'font-bold' : ''}`}>
