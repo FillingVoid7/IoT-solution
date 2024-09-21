@@ -35,20 +35,7 @@ export const generateQuizesByDate = async (req, res, db) => {
         }
 
         const model = await genAI.getGenerativeModel({ model: "gemini-pro" });
-        const prompt = `Create and return a quiz with at least 5 multiple-choice questions with at most 4 multiple options with correct one based on the following text. The response should be in valid JSON format. Here is the example format:
-        [
-            {
-                "question": "What is the capital of France?",
-                "options": ["Paris", "Rome", "Berlin", "Madrid"],
-                "answer": "Paris"
-            },
-            {
-                "question": "What is the capital of Germany?",
-                "options": ["Paris", "Rome", "Berlin", "Madrid"],
-                "answer": "Berlin"
-            }
-        ]
-        Here's the text you can make quiz on: "${oneString}"`;
+        const prompt = `Create and return at least 10 quiz with multiple-choice questions based on the following text. Each question should include the question and an array of 4 options, where each option indicates whether it is correct. Format the output as a JSON array of objects. Here's the text: "${oneString}"`;
 
         const result = await model.generateContent(prompt);
         const quizContent = await result.response.text();
