@@ -1,14 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import React Router's navigate hook
 
 function Home() {
   const [subjects, setSubjects] = useState([]);
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error state
+  const navigate = useNavigate(); // React Router navigate
 
   useEffect(() => {
     const fetchHome = async () => {
-      const response = await axios.get('http://localhost:3000/get-all-subjects');
-      setSubjects(response.data);
-      console.log(response.data);
+      try {
+        const response = await axios.get('http://localhost:3000/get-all-subjects');
+        setSubjects(response.data);
+      } catch (err) {
+        setError('Failed to load subjects');
+      } finally {
+        setLoading(false);
+      }
     };
     fetchHome();
   }, []);
@@ -18,9 +27,31 @@ function Home() {
 
   // Fill in subjects with "No Subject" if there are fewer than 6
   const filledSubjects = [...subjects];
-
   while (filledSubjects.length < totalBoxes) {
     filledSubjects.push('No Subject');
+  }
+
+  // Handle subject click to navigate
+  const handleSubjectClick = (subject) => {
+    if (subject !== 'No Subject') {
+      navigate(`/subject/${subject}`); // Redirect to subject page
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-xl">Loading...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-xl text-red-500">{error}</div>
+      </div>
+    );
   }
 
   return (
@@ -36,7 +67,8 @@ function Home() {
         {filledSubjects.map((subject, index) => (
           <div
             key={index}
-            className="w-80 h-40 bg-gray-200 rounded-lg shadow-lg flex items-center justify-center transition-transform transform hover:scale-110"
+            className="w-80 h-40 bg-gray-200 rounded-lg shadow-lg flex items-center justify-center transition-transform transform hover:scale-110 cursor-pointer"
+            onClick={() => handleSubjectClick(subject)} // Add click handler
           >
             <span className={`text-lg ${subject !== 'No Subject' ? 'font-bold' : ''}`}>
               {subject !== 'No Subject' ? subject.replace('-', ' ') : subject}
