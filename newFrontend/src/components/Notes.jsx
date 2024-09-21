@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 
+// @params content => array of objects containing image_url and image_text
 const Notes = ({ imageData }) => {
-  const [fontSize, setFontSize] = useState(16);
+  console.log(imageData);
+  // State for editable text and styling options
+  const [fontSize, setFontSize] = useState(16); // Font size in pixels
   const [fontName, setFontName] = useState('Arial');
   const [lineHeight, setLineHeight] = useState(1.5);
   const [letterSpacing, setLetterSpacing] = useState(0);
+  
   const [quizData, setQuizData] = useState(null);
   const [flashcardData, setFlashcardData] = useState([]);
   const [isFlashcardModalOpen, setIsFlashcardModalOpen] = useState(false);
@@ -16,8 +18,6 @@ const Notes = ({ imageData }) => {
   const { date, subjectName } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const allText = imageData.map(content => content.image_text).join(' ');
-
-  const [selectedAnswers, setSelectedAnswers] = useState({});
 
   const handleGenerateQuiz = async () => {
     try {
@@ -41,13 +41,6 @@ const Notes = ({ imageData }) => {
     } catch (error) {
       console.error('Error generating flashcards:', error);
     }
-  };
-
-  const handleOptionClick = (questionIndex, optionIndex) => {
-    setSelectedAnswers(prevState => ({
-      ...prevState,
-      [questionIndex]: optionIndex,
-    }));
   };
 
   const closeFlashcardModal = () => {
@@ -75,103 +68,132 @@ const Notes = ({ imageData }) => {
   };
 
   return (
-    <div className="p-4 max-w-4xl mx-auto">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">{subjectName} Notes - {date}</h1>
-        <button onClick={() => setIsSettingsModalOpen(true)} className="px-4 py-2 bg-gray-200 rounded">
-          Settings
-        </button>
+    <div>
+      {/* Font Controls */}
+      <div className="controls mb-4 space-x-4">
+        <label>
+          Font Size:
+          <input 
+            type="range" 
+            min="12" 
+            max="36" 
+            value={fontSize} 
+            onChange={(e) => setFontSize(parseInt(e.target.value))} 
+            className="ml-2" 
+          />
+          <span>{fontSize}px</span>
+        </label>
+        <label>
+          Font Name:
+          <select 
+            value={fontName} 
+            onChange={(e) => setFontName(e.target.value)} 
+            className="ml-2 border p-1"
+          >
+            <option value="Arial">Arial</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Courier New">Courier New</option>
+            <option value="Verdana">Verdana</option>
+          </select>
+        </label>
+        <label>
+          Line Height:
+          <input 
+            type="range" 
+            min="1" 
+            max="2.5" 
+            step="0.1" 
+            value={lineHeight} 
+            onChange={(e) => setLineHeight(parseFloat(e.target.value))} 
+            className="ml-2"
+          />
+          <span>{lineHeight}</span>
+        </label>
+        <label>
+          Letter Spacing:
+          <input 
+            type="range" 
+            min="-0.5" 
+            max="1" 
+            step="0.1" 
+            value={letterSpacing} 
+            onChange={(e) => setLetterSpacing(parseFloat(e.target.value))} 
+            className="ml-2"
+          />
+          <span>{letterSpacing}em</span>
+        </label>
       </div>
 
-      <div className="mb-4 flex space-x-4">
-        <button onClick={handleGenerateQuiz} className="px-4 py-2 bg-blue-500 text-white rounded">
-          Generate Quiz
-        </button>
-        <button onClick={handleGenerateFlashcards} className="px-4 py-2 bg-green-500 text-white rounded">
-          Generate Flashcards
-        </button>
-      </div>
+    
 
-      <div className="mb-4 p-4 border rounded bg-white">
-        <div
-          style={{
-            fontSize: `${fontSize}px`,
-            fontFamily: fontName,
-            lineHeight: lineHeight,
-            letterSpacing: `${letterSpacing}em`,
-          }}
-        >
-          {allText}
-        </div>
-      </div>
-
-      {quizData && (
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-4 text-center">Your Generated Quiz</h2>
-          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2">
-            {quizData.map((question, questionIndex) => (
-              <div
-                key={questionIndex}
-                className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transform transition duration-300 hover:scale-105"
-              >
-                <div className="mb-2 text-lg font-semibold text-blue-700">
-                  {questionIndex + 1}. {question.question}
-                </div>
-                <ul className="space-y-2 mt-4">
-                  {question.options.map((option, optionIndex) => (
-                    <li
-                      key={optionIndex}
-                      className={`px-4 py-2 rounded-md border cursor-pointer ${
-                        selectedAnswers[questionIndex] === optionIndex
-                          ? option.correct
-                            ? 'bg-green-100 border-green-500 text-green-700 font-semibold'
-                            : 'bg-red-100 border-red-500 text-red-700 font-semibold'
-                          : 'bg-gray-100 border-gray-300 text-gray-700'
-                      }`}
-                      onClick={() => handleOptionClick(questionIndex, optionIndex)}
-                    >
-                      {option.answer} 
-                      {selectedAnswers[questionIndex] === optionIndex && option.correct && (
-                        <span className="ml-2">(Correct)</span>
-                      )}
-                      {selectedAnswers[questionIndex] === optionIndex && !option.correct && (
-                        <span className="ml-2">(Incorrect)</span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-{isFlashcardModalOpen && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-    <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
-      <button onClick={closeFlashcardModal} className="float-right">&times;</button>
-      <h2 className="text-xl font-bold mb-4">Flashcard {currentFlashcardIndex + 1} of {flashcardData.length}</h2>
-      <div 
-        className="flashcard-container mb-4 h-64 w-full perspective-1000"
-        onClick={flipFlashcard}
+      <div
+        className="p-4 border rounded bg-white"
+        style={{
+          fontSize: `${fontSize}px`,
+          fontFamily: fontName,
+          lineHeight: lineHeight,
+          letterSpacing: `${letterSpacing}em`,
+        }}
       >
-        <div className={`flashcard relative w-full h-full transition-transform duration-500 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
-          <div className="flashcard-front absolute w-full h-full backface-hidden flex items-center justify-center p-4 bg-blue-100 rounded">
-            <p className="text-center">{flashcardData[currentFlashcardIndex]?.front}</p>
-          </div>
-          <div className="flashcard-back absolute w-full h-full backface-hidden flex items-center justify-center p-4 bg-green-100 rounded rotate-y-180">
-            <p className="text-center">{flashcardData[currentFlashcardIndex]?.back}</p>
-          </div>
+        {test}
+      </div>
+     {quizData && (
+  <div className="mb-8">
+    <h2 className="text-2xl font-bold mb-4 text-center">Your Generated Quiz</h2>
+    <div className="grid gap-6 grid-cols-1 sm:grid-cols-2">
+      {quizData.map((question, index) => (
+        <div
+          key={index}
+          className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transform transition duration-300 hover:scale-105"
+        >
+          <div className="mb-2 text-lg font-semibold text-blue-700">{index + 1}. {question.question}</div>
+          <ul className="space-y-2 mt-4">
+            {question.options.map((option, optionIndex) => (
+              <li
+                key={optionIndex}
+                className={`px-4 py-2 rounded-md border ${
+                  option.correct
+                    ? 'bg-green-100 border-green-500 text-green-700 font-semibold'
+                    : 'bg-gray-100 border-gray-300 text-gray-700'
+                }`}
+              >
+                {option.answer} {option.correct && <span className="ml-2">(Correct)</span>}
+              </li>
+            ))}
+          </ul>
         </div>
-      </div>
-      <div className="flex justify-between">
-        <button onClick={prevFlashcard} disabled={currentFlashcardIndex === 0} className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50">Previous</button>
-        <button onClick={nextFlashcard} disabled={currentFlashcardIndex === flashcardData.length - 1} className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50">Next</button>
-      </div>
+      ))}
     </div>
   </div>
 )}
 
+
+      {isFlashcardModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
+            <button onClick={closeFlashcardModal} className="float-right">&times;</button>
+            <h2 className="text-xl font-bold mb-4">Flashcard {currentFlashcardIndex + 1} of {flashcardData.length}</h2>
+            <div 
+              className="flashcard-container mb-4 h-64 w-full perspective-1000"
+              onClick={flipFlashcard}
+            >
+              <div className={`flashcard relative w-full h-full transition-transform duration-500 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
+                <div className="flashcard-front absolute w-full h-full backface-hidden flex items-center justify-center p-4 bg-blue-100 rounded">
+                  <p className="text-center">{flashcardData[currentFlashcardIndex]?.question}</p>
+                </div>
+                <div className="flashcard-back absolute w-full h-full backface-hidden flex items-center justify-center p-4 bg-green-100 rounded rotate-y-180">
+                  <p className="text-center">{flashcardData[currentFlashcardIndex]?.answer}</p>
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <button onClick={prevFlashcard} disabled={currentFlashcardIndex === 0} className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50">Previous</button>
+              <button onClick={nextFlashcard} disabled={currentFlashcardIndex === flashcardData.length - 1} className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50">Next</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {isSettingsModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
