@@ -224,6 +224,7 @@ function Contents() {
     <div className="flex h-screen ">
       {/* Sidebar */}
       <div className="w-48 left-0 top-0 fixed flex-shrink-0 flex flex-col items-start justify-start py-4 space-y-4 px-2 h-full">
+        <img src="/logo.png" onClick={() => navigate('/')} alt="Y" className="h-10 mx-auto cursor-pointer" />
         <SidebarItem icon={MdHome} label="Home" />
         <SidebarItem icon={MdDashboard} label="Dashboard" />
         <SidebarItem icon={MdNotes} label="Notes" />
