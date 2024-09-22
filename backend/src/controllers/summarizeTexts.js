@@ -7,31 +7,30 @@ export const summarizeTextsByDate = async (req, res, db) => {
   try {
     
     // Extract subjectName from query parameters and date from req.params
-    const subjectName = req.query.subjectName;
-    const { date } = req.params;
-
-    console.log("Subject Name:", subjectName);
-    console.log("Date:", date);
+    // const subjectName = req.query.subjectName;
+    // const { date } = req.params;
+    const {text} = req.body;
+    let oneString = text;
 
     // Fetch the document from the subject's collection based on the date
-    const collection = await db.collection(subjectName);
-    const document = await collection.findOne(
-      { date: date },
-      { projection: { content: 1, _id: 0 } }
-    );
+    // const collection = await db.collection(subjectName);
+    // const document = await collection.findOne(
+    //   { date: date },
+    //   { projection: { content: 1, _id: 0 } }
+    // );
 
-    if (!document) {
-      return res.status(404).json({ message: `No content found for this date: ${date}` });
-    }
+    // if (!document) {
+    //   return res.status(404).json({ message: `No content found for this date: ${date}` });
+    // }
 
     // Combine all image texts into one string
-    let oneString = document.content.map(real => real.image_text).join(' ');
+    //let oneString = document.content.map(real => real.image_text).join(' ');
 
     // Generating summary and references
     const model = await genAI.getGenerativeModel({ model: "gemini-pro" });
     
     // Generate summarized text
-    const summaryPrompt = `Summarize the following text without going outside of this topic, you can summarize in simple words for students related to this content: "${oneString}"`;
+    const summaryPrompt = `Summarize the following text without going outside of this topic, you can summarize in simple words for students related to this content: "${oneString}" You can use md format for better visuals.`;
     const summaryResult = await model.generateContent(summaryPrompt);
     const summarizedText = summaryResult.response.text().trim();
 
@@ -54,10 +53,10 @@ export const summarizeTextsByDate = async (req, res, db) => {
     };
 
     // Update the document in the database with the summary and references
-    await collection.updateOne(
-      { date: date },
-      { $set: { summary: resultObject } }
-    );
+    // await collection.updateOne(
+    //   { date: date },
+    //   { $set: { summary: resultObject } }
+    // );
 
     // Return the summarized content and references to the frontend
     return res.status(200).json({
