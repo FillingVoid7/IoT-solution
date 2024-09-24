@@ -12,7 +12,7 @@ const Notes = ({ imageData }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [noteText, setNoteText] = useState('');
   const { date } = useParams();
-  console.log(imageData);
+
   useEffect(() => {
     const allText = imageData.map((content) => content.image_text).join('\n\n');
     setNoteText(allText);
@@ -22,8 +22,21 @@ const Notes = ({ imageData }) => {
     setIsDarkMode(!isDarkMode);
   };
 
+  // Wrap each character in a span tag with Tailwind classes for hover effects
+  const wrapCharactersInSpans = (text) => {
+    return text.split('').map((char, index) => (
+      <span
+        key={index}
+        className={`inline-block transition-transform duration-200 ease-in-out hover:scale-150
+        ${index % 3 === 0 ? 'hover:text-red-400' : index % 3 === 1 ? 'hover:text-blue-400' : 'hover:text-green-400'}`}
+      >
+        {char}
+      </span>
+    ));
+  };
+
   return (
-    <div className="min-h-screen p-8 bg-gray-100 text-gray-900">
+    <div className={`min-h-screen p-8 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'}`}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -51,7 +64,7 @@ const Notes = ({ imageData }) => {
         </header>
 
         <motion.div
-          className="p-6 rounded-lg shadow-lg bg-white"
+          className="p-6 rounded-lg shadow-lg bg-white dark:bg-gray-800"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
@@ -67,7 +80,8 @@ const Notes = ({ imageData }) => {
               letterSpacing: `${letterSpacing}em`,
             }}
           >
-            {noteText}
+            {/* Render each character wrapped in a span */}
+            {wrapCharactersInSpans(noteText)}
           </div>
         </motion.div>
       </motion.div>
