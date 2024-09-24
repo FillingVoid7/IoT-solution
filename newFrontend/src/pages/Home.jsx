@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import React Router's navigate hook
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
   const [subjects, setSubjects] = useState([]);
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error state
-  const navigate = useNavigate(); // React Router navigate
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchHome = async () => {
@@ -22,19 +22,15 @@ function Home() {
     fetchHome();
   }, []);
 
-  // Define the number of total boxes (6)
   const totalBoxes = 6;
-
-  // Fill in subjects with "No Subject" if there are fewer than 6
   const filledSubjects = [...subjects];
   while (filledSubjects.length < totalBoxes) {
     filledSubjects.push('No Subject');
   }
 
-  // Handle subject click to navigate
   const handleSubjectClick = (subject) => {
     if (subject !== 'No Subject') {
-      navigate(`/subject/${subject}`); // Redirect to subject page
+      navigate(`/subject/${subject}`);
     }
   };
 
@@ -44,7 +40,7 @@ function Home() {
         <div className="text-xl">Loading...</div>
       </div>
     );
-  } 
+  }
 
   if (error) {
     return (
@@ -55,28 +51,30 @@ function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gradient-to-r from-blue-200 to-indigo-200">
       {/* Header Bar */}
-      <div className="w-full bg-blue-900 py-4">
-        <h1 className="text-white text-center text-2xl font-bold">
-          Choose your subject:
+      <div className="w-full bg-blue-900 py-6 shadow-lg">
+        <div className='text-left'><img src='/logo.png' onClick={() => navigate('/')} alt="Y" className="h-10 mx-auto cursor-pointer" />
+        </div>
+        <h1 className="text-white text-center text-3xl font-bold mt-2">
+          Choose Your Subject
         </h1>
       </div>
 
       <div className="flex flex-wrap justify-center mt-10 gap-6">
-        {filledSubjects.map((subject, index) => (
+        {filledSubjects.map((subject, index) =>
           subject !== 'flashcards' && subject !== 'quizes' && (
             <div
               key={index}
-              className="w-80 h-40 bg- rounded-lg shadow-lg flex items-center justify-center transition-transform transform hover:scale-110 cursor-pointer"
-              onClick={() => handleSubjectClick(subject)} // Add click handler
+              className="w-80 h-20 bg-white rounded-lg shadow-2xl flex items-center justify-center transition-transform transform hover:scale-105 cursor-pointer border-2 border-blue-300 hover:border-blue-500"
+              onClick={() => handleSubjectClick(subject)}
             >
-              <span className={`text-lg ${subject !== 'No Subject' ? 'font-bold' : ''}`}>
+              <span className={`text-2xl ${subject !== 'No Subject' ? 'font-semibold text-blue-800' : 'text-gray-500'}`}>
                 {subject}
               </span>
             </div>
           )
-        ))}
+        )}
       </div>
     </div>
   );

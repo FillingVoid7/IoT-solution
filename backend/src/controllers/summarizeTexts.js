@@ -9,8 +9,6 @@ export const summarizeTextsByDate = async (req, res, db) => {
     // Extract subjectName from query parameters and date from req.params
     const subjectName = req.query.subjectName;
     const { date } = req.params;
-    let oneString = req.body.text;
-    console.log(oneString)
 
     console.log("Subject Name:", subjectName);
     console.log("Date:", date);
@@ -26,14 +24,14 @@ export const summarizeTextsByDate = async (req, res, db) => {
     //   return res.status(404).json({ message: `No content found for this date: ${date}` });
     // }
 
-    // // Combine all image texts into one string
-    // let oneString = document.content.map(real => real.image_text).join(' ');
+    // Combine all image texts into one string
+    let oneString = document.content.map(real => real.image_text).join(' ');
 
     // Generating summary and references
     const model = await genAI.getGenerativeModel({ model: "gemini-pro" });
     
     // Generate summarized text
-    const summaryPrompt = `Summarize the following text without going outside of this topic, you can summarize in simple words for students related to this content: "${oneString}"`;
+    const summaryPrompt = `Summarize the following text without going outside of this topic, you can summarize in simple words for students related to this content: "${oneString}" You can use md format for better visuals.`;
     const summaryResult = await model.generateContent(summaryPrompt);
     const summarizedText = summaryResult.response.text().trim();
 
